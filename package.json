@@ -4,7 +4,7 @@
   "description": "Bot for Coinbase",
   "main": "index.js",
   "scripts": {
-"start": "node index.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -15,5 +15,8 @@
     "cryptocurrency"
   ],
   "author": "Vikram Deshmukh",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "coinbase": "^2.0.6"
+  }
 }
