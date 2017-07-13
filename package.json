@@ -16,6 +16,7 @@
   "author": "Vikram Deshmukh",
   "license": "ISC",
   "dependencies": {
-    "coinbase": "^2.0.6"
+    "coinbase": "^2.0.6",
+    "dotenv": "^4.0.0"
   }
 }
