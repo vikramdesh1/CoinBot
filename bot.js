@@ -14,12 +14,12 @@ const ETH_MIN_PROFIT_MARGIN = process.env.ETH_MIN_PROFIT_MARGIN;
 //Refresh period
 const REFRESH_PERIOD = process.env.REFRESH_PERIOD;
 
-function startSellLoop(wallet, callback) {
+function startWatchLoop(wallet, callback) {
     try {
         coinbaseClient.getAccount(wallet, function (err, account) {
             if (err) {
                 console.error(err);
-                throw "Error in startSellLoop - client.getAccount";
+                throw "Error in startWatchLoop - client.getAccount";
             }
             const loopIntervalObj = setInterval(function () {
                 checkProfitMargin(account, function (output) {
@@ -89,4 +89,4 @@ function checkProfitMargin(account, callback) {
     }
 }
 
-exports.startSellLoop = startSellLoop;
+exports.startWatchLoop = startWatchLoop;
