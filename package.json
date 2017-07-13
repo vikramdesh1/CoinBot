@@ -1,11 +1,10 @@
 {
   "name": "coinbot",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Bot for Coinbase",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "keywords": [
     "bot",
