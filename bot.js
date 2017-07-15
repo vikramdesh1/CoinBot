@@ -108,7 +108,7 @@ function checkProfitMargin(account, callback) {
                     var currentProfitMargin = (currentSellPrice / lastBuyPrice) - 1;
                     var output = {
                         "currency": account.currency,
-                        "lastBuyPrice": lastBuyPrice,
+                        "lastAverageBuyPrice": lastBuyPrice,
                         "currentSellPrice": currentSellPrice,
                         "currentProfitMargin": currentProfitMargin,
                         "timestamp": new Date().toString()
