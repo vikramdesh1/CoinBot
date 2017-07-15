@@ -27,11 +27,12 @@ function startWatchLoop(wallet, callback) {
                         clearInterval(loopIntervalObj);
                         throw "Error in checkProfitMargin";
                     }
-                    var sellThreshold = 1.0;
                     if (account.currency == "BTC") {
                         sellThreshold = BTC_MIN_PROFIT_MARGIN;
+                        output.sellThreshold = sellThreshold;
                     } else if (account.currency == "ETH") {
                         sellThreshold = ETH_MIN_PROFIT_MARGIN;
+                        output.sellThreshold = sellThreshold;
                     }
                     if (output.currentProfitMargin >= sellThreshold) {
                         var sellParams = {
@@ -87,8 +88,8 @@ function checkProfitMargin(account, callback) {
                     num += parseFloat(buy.native_amount.amount);
                     denom += parseFloat(buy.amount.amount);
                 });
-                buyPrice = num/denom;
-            } 
+                buyPrice = num / denom;
+            }
             if (buyPrice != 0.0) {
                 var quoteParams = {
                     "amount": account.balance.amount,
