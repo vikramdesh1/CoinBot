@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "coinbase": "^2.0.6",
-    "dotenv": "^4.0.0"
+    "dotenv": "^4.0.0",
+    "raven": "^2.1.0"
   }
 }

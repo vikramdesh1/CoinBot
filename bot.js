@@ -25,12 +25,34 @@ function startWatchLoop(wallet, callback) {
                 checkProfitMargin(account, function (output) {
                     if (output == null) {
                         clearInterval(loopIntervalObj);
-                        throw "Problem in checkProfitMargin";
+                        throw "Error in checkProfitMargin";
+                    }
+                    var sellThreshold = 1.0;
+                    if (account.currency == "BTC") {
+                        sellThreshold = BTC_MIN_PROFIT_MARGIN;
+                    } else if (account.currency == "ETH") {
+                        sellThreshold = ETH_MIN_PROFIT_MARGIN;
+                    }
+                    if (output.currentProfitMargin >= sellThreshold) {
+                        var sellParams = {
+                            "amount": account.balance.amount,
+                            "currency": account.currency,
+                            "payment_method": USD_WALLET_PAYMENT
+                        };
+                        //Sell all coins
+                        account.sell(sellParams, function (err, tx) {
+                            if (err) {
+                                console.error(err);
+                                throw "Error in startWatchLoop - account.sell (sell)";
+                            }
+                            callback(tx);
+                            clearInterval(loopIntervalObj);
+                        });
                     }
                     callback(output);
                 });
             }, REFRESH_PERIOD);
-            callback("Sell loop started for - " + account.name);
+            callback("Watch loop started for - " + account.name);
         });
     } catch (err) {
         console.log(err);
@@ -74,12 +96,48 @@ function checkProfitMargin(account, callback) {
                         "currency": account.currency,
                         "lastBuyPrice": lastBuyPrice,
                         "currentSellPrice": currentSellPrice,
-                        "currentProfitMargin": currentProfitMargin
+                        "currentProfitMargin": currentProfitMargin,
+                        "timestamp": new Date().toString()
                     }
                     callback(output);
                 });
             } else {
                 console.log("No buys yet on account - " + account.name);
+                callback(null);
+            }
+        });
+    } catch (err) {
+        console.log(err);
+        callback(null);
+    }
+}
+
+function getWeightedAverageBuyPrice(account, callback) {
+    try {
+        account.getTransactions({}, function (err, txs) {
+            if (err) {
+                console.error(err);
+                throw "Error in getWeightedAverageBuyPrice - account.getTransactions";
+            }
+            var lastBuys = [];
+            if (txs.length > 0) {
+                for (var i = 0; i < txs.length; i++) {
+                    if (txs[i].amount.amount > 0 && txs[i].type == "buy" && txs[i].status.toLowerCase() == "completed") {
+                        lastBuys.push(txs[i]);
+                    }
+                    if (txs[i].amount.amount < 0 && txs[i].type == "sell") {
+                        break;
+                    }
+                }
+            }
+            if (lastBuys.length > 0) {
+                var num = 0.0, denom = 0.0;
+                lastBuys.forEach(function (buy) {
+                    num += parseFloat(buy.native_amount.amount * buy.amount.amount);
+                    denom += parseFloat(buy.amount.amount);
+                });
+                callback(num / denom);
+            } else {
                 callback(null);
             }
         });
