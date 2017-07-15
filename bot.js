@@ -125,39 +125,4 @@ function checkProfitMargin(account, callback) {
     }
 }
 
-function getWeightedAverageBuyPrice(account, callback) {
-    try {
-        account.getTransactions({}, function (err, txs) {
-            if (err) {
-                console.error(err);
-                throw "Error in getWeightedAverageBuyPrice - account.getTransactions";
-            }
-            var lastBuys = [];
-            if (txs.length > 0) {
-                for (var i = 0; i < txs.length; i++) {
-                    if (txs[i].amount.amount > 0 && txs[i].type == "buy" && txs[i].status.toLowerCase() == "completed") {
-                        lastBuys.push(txs[i]);
-                    }
-                    if (txs[i].amount.amount < 0 && txs[i].type == "sell") {
-                        break;
-                    }
-                }
-            }
-            if (lastBuys.length > 0) {
-                var num = 0.0, denom = 0.0;
-                lastBuys.forEach(function (buy) {
-                    num += parseFloat(buy.native_amount.amount * buy.amount.amount);
-                    denom += parseFloat(buy.amount.amount);
-                });
-                callback(num / denom);
-            } else {
-                callback(null);
-            }
-        });
-    } catch (err) {
-        console.log(err);
-        callback(null);
-    }
-}
-
 exports.startWatchLoop = startWatchLoop;
