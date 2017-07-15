@@ -69,14 +69,27 @@ function checkProfitMargin(account, callback) {
                 console.error(err);
                 throw "Error in checkETHProfitMargin - account.getTransactions";
             }
-            var lastBuy;
-            for (var i = 0; i < txs.length; i++) {
-                if (txs[i].amount.amount > 0 && txs[i].type == "buy" && txs[i].status.toLowerCase() == "completed") {
-                    lastBuy = txs[i];
-                    break;
+            var lastBuys = [];
+            if (txs.length > 0) {
+                for (var i = 0; i < txs.length; i++) {
+                    if (txs[i].amount.amount > 0 && txs[i].type == "buy" && txs[i].status.toLowerCase() == "completed") {
+                        lastBuys.push(txs[i]);
+                    }
+                    if (txs[i].amount.amount < 0 && txs[i].type == "sell") {
+                        break;
+                    }
                 }
             }
-            if (lastBuy) {
+            var buyPrice = 0.0;
+            if (lastBuys.length > 0) {
+                var num = 0.0, denom = 0.0;
+                lastBuys.forEach(function (buy) {
+                    num += parseFloat(buy.native_amount.amount);
+                    denom += parseFloat(buy.amount.amount);
+                });
+                buyPrice = num/denom;
+            } 
+            if (buyPrice != 0.0) {
                 var quoteParams = {
                     "amount": account.balance.amount,
                     "currency": account.currency,
@@ -89,7 +102,7 @@ function checkProfitMargin(account, callback) {
                         console.error(err);
                         throw "Error in checkETHProfitMargin - account.sell (quote)";
                     }
-                    var lastBuyPrice = lastBuy.native_amount.amount / lastBuy.amount.amount;
+                    var lastBuyPrice = buyPrice;
                     var currentSellPrice = tx.total.amount / tx.amount.amount;
                     var currentProfitMargin = (currentSellPrice / lastBuyPrice) - 1;
                     var output = {
