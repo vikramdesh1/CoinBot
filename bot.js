@@ -116,8 +116,7 @@ function checkProfitMargin(account, callback) {
                     callback(output);
                 });
             } else {
-                console.log("No buys yet on account - " + account.name);
-                callback(null);
+                callback("No buys yet on account - " + account.name);
             }
         });
     } catch (err) {
