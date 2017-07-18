@@ -20,7 +20,7 @@ try {
         bot.startWatchLoop(BTC_WALLET, function (output) {
             console.log(output);
         });
-    }, REFRESH_PERIOD/2);
+    }, REFRESH_PERIOD / 2);
 
 } catch (err) {
     console.log(err);
