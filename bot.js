@@ -5,6 +5,7 @@ const API_SECRET = process.env.API_SECRET;
 const BTC_WALLET = process.env.BTC_WALLET;
 const ETH_WALLET = process.env.ETH_WALLET;
 const USD_WALLET_PAYMENT = process.env.USD_WALLET_PAYMENT;
+const SENTRY_DSN = process.env.SENTRY_DSN;
 //Coinbase variables
 var Client = require('coinbase').Client;
 var coinbaseClient = new Client({ 'apiKey': API_KEY, 'apiSecret': API_SECRET });
@@ -13,6 +14,9 @@ const BTC_MIN_PROFIT_MARGIN = process.env.BTC_MIN_PROFIT_MARGIN;
 const ETH_MIN_PROFIT_MARGIN = process.env.ETH_MIN_PROFIT_MARGIN;
 //Refresh period
 const REFRESH_PERIOD = process.env.REFRESH_PERIOD;
+//Sentry
+var Raven = require('raven');
+Raven.config(SENTRY_DSN).install();
 
 function startWatchLoop(wallet, callback) {
     try {
