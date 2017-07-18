@@ -73,7 +73,7 @@ function checkProfitMargin(account, callback) {
             var lastBuys = [];
             if (txs.length > 0) {
                 for (var i = 0; i < txs.length; i++) {
-                    if (txs[i].amount.amount > 0 && txs[i].type == "buy" && txs[i].status.toLowerCase() == "completed") {
+                    if (txs[i].amount.amount > 0 && txs[i].status.toLowerCase() == "completed") {
                         lastBuys.push(txs[i]);
                     }
                     if (txs[i].amount.amount < 0 && txs[i].type == "sell") {
