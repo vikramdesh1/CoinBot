@@ -59,13 +59,14 @@ function startWatchLoop(wallet, callback) {
                             clearInterval(loopIntervalObj);
                         });
                     }
-                    callback(output);
+                    callback(account.currency + " - avgBuyPrice : " + output.avgBuyPrice.toFixed(2) + ", sellPrice : " + output.currentSellPrice.toFixed(2) + ", profit : " + output.currentProfitMargin.toFixed(2) + ", minProfit : " + sellThreshold);
                 });
             }, REFRESH_PERIOD);
             callback("Watch loop started for - " + account.name);
         });
     } catch (err) {
         console.log(err);
+        Raven.captureException(e);
         callback(null);
     }
 
@@ -112,12 +113,12 @@ function checkProfitMargin(account, callback) {
                         console.error(err);
                         throw "Error in checkETHProfitMargin - account.sell (quote)";
                     }
-                    var lastBuyPrice = buyPrice;
+                    var avgBuyPrice = buyPrice;
                     var currentSellPrice = tx.total.amount / tx.amount.amount;
-                    var currentProfitMargin = (currentSellPrice / lastBuyPrice) - 1;
+                    var currentProfitMargin = (currentSellPrice / avgBuyPrice) - 1;
                     var output = {
                         "currency": account.currency,
-                        "lastAverageBuyPrice": lastBuyPrice,
+                        "averageBuyPrice": avgBuyPrice,
                         "currentSellPrice": currentSellPrice,
                         "currentProfitMargin": currentProfitMargin,
                         "timestamp": new Date().toString()
@@ -130,6 +131,7 @@ function checkProfitMargin(account, callback) {
         });
     } catch (err) {
         console.log(err);
+        Raven.captureException(e);
         callback(null);
     }
 }
