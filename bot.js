@@ -66,7 +66,7 @@ function startWatchLoop(wallet, callback) {
         });
     } catch (err) {
         console.log(err);
-        Raven.captureException(e);
+        Raven.captureException(err);
         callback(null);
     }
 
@@ -131,7 +131,7 @@ function checkProfitMargin(account, callback) {
         });
     } catch (err) {
         console.log(err);
-        Raven.captureException(e);
+        Raven.captureException(err);
         callback(null);
     }
 }
