@@ -33,33 +33,34 @@ function startWatchLoop(wallet, callback) {
             const loopIntervalObj = setInterval(function () {
                 checkProfitMargin(account, function (output) {
                     if (output == null) {
+                        console.log("No buys yet on account - " + account.name + ". Terminating loop.");
                         clearInterval(loopIntervalObj);
-                        throw "Error in checkProfitMargin";
+                    } else {
+                        if (account.currency == "BTC") {
+                            sellThreshold = BTC_MIN_PROFIT_MARGIN;
+                            output.sellThreshold = sellThreshold;
+                        } else if (account.currency == "ETH") {
+                            sellThreshold = ETH_MIN_PROFIT_MARGIN;
+                            output.sellThreshold = sellThreshold;
+                        }
+                        if (output.currentProfitMargin >= sellThreshold) {
+                            var sellParams = {
+                                "amount": account.balance.amount,
+                                "currency": account.currency,
+                                "payment_method": USD_WALLET_PAYMENT
+                            };
+                            //Sell all coins
+                            account.sell(sellParams, function (err, tx) {
+                                if (err) {
+                                    console.error(err);
+                                    throw "Error in startWatchLoop - account.sell (sell)";
+                                }
+                                callback(tx);
+                                clearInterval(loopIntervalObj);
+                            });
+                        }
+                        callback(account.currency + " - avgBuyPrice : " + output.avgBuyPrice.toFixed(2) + ", sellPrice : " + output.currentSellPrice.toFixed(2) + ", profit : " + output.currentProfitMargin.toFixed(2) + ", minProfit : " + sellThreshold);
                     }
-                    if (account.currency == "BTC") {
-                        sellThreshold = BTC_MIN_PROFIT_MARGIN;
-                        output.sellThreshold = sellThreshold;
-                    } else if (account.currency == "ETH") {
-                        sellThreshold = ETH_MIN_PROFIT_MARGIN;
-                        output.sellThreshold = sellThreshold;
-                    }
-                    if (output.currentProfitMargin >= sellThreshold) {
-                        var sellParams = {
-                            "amount": account.balance.amount,
-                            "currency": account.currency,
-                            "payment_method": USD_WALLET_PAYMENT
-                        };
-                        //Sell all coins
-                        account.sell(sellParams, function (err, tx) {
-                            if (err) {
-                                console.error(err);
-                                throw "Error in startWatchLoop - account.sell (sell)";
-                            }
-                            callback(tx);
-                            clearInterval(loopIntervalObj);
-                        });
-                    }
-                    callback(account.currency + " - avgBuyPrice : " + output.avgBuyPrice.toFixed(2) + ", sellPrice : " + output.currentSellPrice.toFixed(2) + ", profit : " + output.currentProfitMargin.toFixed(2) + ", minProfit : " + sellThreshold);
                 });
             }, REFRESH_PERIOD);
             callback("Watch loop started for - " + account.name);
@@ -125,7 +126,7 @@ function checkProfitMargin(account, callback) {
                     callback(output);
                 });
             } else {
-                callback("No buys yet on account - " + account.name);
+                callback(null);
             }
         });
     } catch (err) {
