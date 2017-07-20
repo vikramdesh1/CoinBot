@@ -20,8 +20,8 @@ const ETH_MIN_PROFIT_MARGIN = process.env.ETH_MIN_PROFIT_MARGIN;
 const REFRESH_PERIOD = process.env.REFRESH_PERIOD;
 
 //Sentry
-var Raven = require('raven');
-Raven.config(SENTRY_DSN).install();
+//var Raven = require('raven');
+//Raven.config(SENTRY_DSN).install();
 
 function startWatchLoop(wallet, callback) {
     try {
@@ -66,7 +66,6 @@ function startWatchLoop(wallet, callback) {
         });
     } catch (err) {
         console.log(err);
-        Raven.captureException(err);
         callback(null);
     }
 
@@ -131,7 +130,6 @@ function checkProfitMargin(account, callback) {
         });
     } catch (err) {
         console.log(err);
-        Raven.captureException(err);
         callback(null);
     }
 }

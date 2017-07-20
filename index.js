@@ -24,5 +24,4 @@ try {
 
 } catch (err) {
     console.log(err);
-    Raven.captureException(err);
 }
