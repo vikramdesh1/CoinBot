@@ -59,7 +59,7 @@ function startWatchLoop(wallet, callback) {
                                 clearInterval(loopIntervalObj);
                             });
                         }
-                        callback(account.currency + " - avgBuyPrice : " + output.avgBuyPrice.toFixed(2) + ", sellPrice : " + output.currentSellPrice.toFixed(2) + ", profit : " + output.currentProfitMargin.toFixed(2) + ", minProfit : " + sellThreshold);
+                        callback(account.currency + " - averageBuyPrice : " + output.averageBuyPrice.toFixed(2) + ", sellPrice : " + output.currentSellPrice.toFixed(2) + ", profit : " + output.currentProfitMargin.toFixed(2) + ", minProfit : " + sellThreshold);
                     }
                 });
             }, REFRESH_PERIOD);
