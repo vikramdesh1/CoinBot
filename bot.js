@@ -64,7 +64,7 @@ function startWatchLoop(wallet, callback) {
                                 callback("Would've sold all " + account.currency + " here");
                             }
                         }
-                        callback(account.currency + " - averageBuyPrice : " + output.averageBuyPrice.toFixed(2) + ", sellPrice : " + output.currentSellPrice.toFixed(2) + ", profit : " + output.currentProfitMargin.toFixed(2) + ", minProfit : " + sellThreshold);
+                        callback(output.timestamp + " : " + account.currency + " - averageBuyPrice : " + output.averageBuyPrice.toFixed(2) + ", sellPrice : " + output.currentSellPrice.toFixed(2) + ", profit : " + output.currentProfitMargin.toFixed(2) + ", minProfit : " + sellThreshold);
                     }
                 });
             }, REFRESH_PERIOD);
