@@ -7,6 +7,7 @@ const BTC_WALLET = process.env.BTC_WALLET;
 const ETH_WALLET = process.env.ETH_WALLET;
 const USD_WALLET_PAYMENT = process.env.USD_WALLET_PAYMENT;
 const SENTRY_DSN = process.env.SENTRY_DSN;
+const DEV_MODE = process.env.DEV_MODE;
 
 //Coinbase variables
 var Client = require('coinbase').Client;
@@ -49,15 +50,19 @@ function startWatchLoop(wallet, callback) {
                                 "currency": account.currency,
                                 "payment_method": USD_WALLET_PAYMENT
                             };
-                            //Sell all coins
-                            account.sell(sellParams, function (err, tx) {
-                                if (err) {
-                                    console.error(err);
-                                    throw "Error in startWatchLoop - account.sell (sell)";
-                                }
-                                callback(tx);
-                                clearInterval(loopIntervalObj);
-                            });
+                            if (!DEV_MODE) {
+                                //Sell all coins
+                                account.sell(sellParams, function (err, tx) {
+                                    if (err) {
+                                        console.error(err);
+                                        throw "Error in startWatchLoop - account.sell (sell)";
+                                    }
+                                    callback(tx);
+                                    clearInterval(loopIntervalObj);
+                                });
+                            } else {
+                                callback("Would've sold all " + account.currency + " here");
+                            }
                         }
                         callback(account.currency + " - averageBuyPrice : " + output.averageBuyPrice.toFixed(2) + ", sellPrice : " + output.currentSellPrice.toFixed(2) + ", profit : " + output.currentProfitMargin.toFixed(2) + ", minProfit : " + sellThreshold);
                     }
