@@ -1,5 +1,7 @@
 require('dotenv').config();
 var bot = require('./bot.js');
+var app = require('http').createServer(handler);
+var io = require('socket.io')(app);
 
 const BTC_WALLET = process.env.BTC_WALLET;
 const ETH_WALLET = process.env.ETH_WALLET;
@@ -11,6 +13,17 @@ const REFRESH_PERIOD = process.env.REFRESH_PERIOD;
 //Sentry
 var Raven = require('raven');
 Raven.config(SENTRY_DSN).install();
+
+app.listen(80);
+
+function handler(req, res) {
+
+}
+
+io.on('connection', function(socket) {
+    console.log("connection!");
+    socket.emit('test', "hello world");
+});
 
 try {
     bot.startWatchLoop(ETH_WALLET, function (output) {
