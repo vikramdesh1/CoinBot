@@ -15,7 +15,7 @@ const REFRESH_PERIOD = process.env.REFRESH_PERIOD;
 var Raven = require('raven');
 Raven.config(SENTRY_DSN).install();
 
-app.listen(80);
+app.listen(3000);
 
 function handler(req, res) {
     fs.readFile(__dirname + '/index.html', function (err, data) {
