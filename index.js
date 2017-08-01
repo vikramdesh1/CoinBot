@@ -18,8 +18,8 @@ Raven.config(SENTRY_DSN).install();
 app.listen(80);
 
 function handler(req, res) {
-    fs.readFile(__dirname + '/index.html', function(err, data) {
-        if(err) {
+    fs.readFile(__dirname + '/index.html', function (err, data) {
+        if (err) {
             res.writeHead(500);
             return res.end('Error loading index.html');
         }
@@ -28,18 +28,20 @@ function handler(req, res) {
     })
 }
 
-io.on('connection', function(socket) {
-    console.log("connection!");
-    socket.emit('test', "hello world");
+io.on('connection', function (socket) {
+    console.log("Front-end client connected");
 });
 
 try {
     bot.startWatchLoop(ETH_WALLET, function (output) {
         console.log(output);
+        io.emit('loopUpdate', output);
     });
     setTimeout(function () {
         bot.startWatchLoop(BTC_WALLET, function (output) {
             console.log(output);
+            io.emit('loopUpdate', output);
+
         });
     }, REFRESH_PERIOD / 2);
 
