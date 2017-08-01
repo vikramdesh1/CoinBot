@@ -1,0 +1,25 @@
+<html>
+
+<head>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        var socket = io('http://localhost');
+        socket.on('loopUpdate', function (data) {
+            $("#loop").html(data);
+        });
+        socket.on('disconnect', function (data) {
+            alert("Disconnected from server");
+        });
+    </script>
+</head>
+
+<body>
+    <h3>coinbot</h3>
+
+    <div>
+        <p id="loop"></p>
+    </div>
+</body>
+
+</html>
