@@ -6,7 +6,12 @@
     <script>
         var socket = io('http://localhost');
         socket.on('loopUpdate', function (data) {
-            $("#loop").html(data);
+            console.log(data);
+            $("#loop").fadeOut(500, function(){
+                $("#loop").html(data);
+                $("#loop").fadeIn(500);
+            })
+            
         });
         socket.on('disconnect', function (data) {
             alert("Disconnected from server");

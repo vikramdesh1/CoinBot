@@ -41,7 +41,6 @@ try {
         bot.startWatchLoop(BTC_WALLET, function (output) {
             console.log(output);
             io.emit('loopUpdate', output);
-
         });
     }, REFRESH_PERIOD / 2);
 
