@@ -56,16 +56,19 @@ function startWatchLoop(wallet, callback) {
                                 "currency": account.currency,
                                 "payment_method": USD_WALLET_PAYMENT
                             };
-
-                            //Sell all coins
-                            account.sell(sellParams, function (err, tx) {
-                                if (err) {
-                                    console.error(err);
-                                    throw "Error in startWatchLoop - account.sell (sell)";
-                                }
-                                callback(tx);
-                                clearInterval(loopIntervalObj);
-                            });
+                            if (DEV_MODE == "false") {
+                                //Sell all coins
+                                account.sell(sellParams, function (err, tx) {
+                                    if (err) {
+                                        console.error(err);
+                                        throw "Error in startWatchLoop - account.sell (sell)";
+                                    }
+                                    callback(tx);
+                                    clearInterval(loopIntervalObj);
+                                });
+                            } else {
+                                console.log("Would've sold all " + account.currency + " here if dev mode was off");
+                            }
                         }
                         callback(output.timestamp + " : " + account.currency + " - averageBuyPrice : " + output.averageBuyPrice.toFixed(2) + ", sellPrice : " + output.currentSellPrice.toFixed(2) + ", profit : " + output.currentProfitMargin.toFixed(2) + ", minProfit : " + sellThreshold);
                     }
