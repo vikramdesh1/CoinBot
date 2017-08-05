@@ -18,7 +18,7 @@
   "dependencies": {
     "coinbase": "^2.0.6",
     "dotenv": "^4.0.0",
-    "raven": "^2.1.0",
+    "raven": "^2.1.1",
     "socket.io": "^2.0.3"
   }
 }
