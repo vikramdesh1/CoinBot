@@ -2,6 +2,10 @@
   "name": "coinbot",
   "version": "0.2.0",
   "description": "Bot for Coinbase",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vikramdesh1/CoinBot"
+  },
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
