@@ -44,25 +44,28 @@ function startWatchLoop(wallet, callback) {
                             sellThreshold = ETH_MIN_PROFIT_MARGIN;
                             output.sellThreshold = sellThreshold;
                         }
+                        if (!DEV_MODE) {
+                            console.log("false");
+                        }
+                        else {
+                            console.log("true");
+                        }
                         if (output.currentProfitMargin >= sellThreshold) {
                             var sellParams = {
                                 "amount": account.balance.amount,
                                 "currency": account.currency,
                                 "payment_method": USD_WALLET_PAYMENT
                             };
-                            if (!DEV_MODE) {
-                                //Sell all coins
-                                account.sell(sellParams, function (err, tx) {
-                                    if (err) {
-                                        console.error(err);
-                                        throw "Error in startWatchLoop - account.sell (sell)";
-                                    }
-                                    callback(tx);
-                                    clearInterval(loopIntervalObj);
-                                });
-                            } else {
-                                callback("Would've sold all " + account.currency + " here");
-                            }
+
+                            //Sell all coins
+                            account.sell(sellParams, function (err, tx) {
+                                if (err) {
+                                    console.error(err);
+                                    throw "Error in startWatchLoop - account.sell (sell)";
+                                }
+                                callback(tx);
+                                clearInterval(loopIntervalObj);
+                            });
                         }
                         callback(output.timestamp + " : " + account.currency + " - averageBuyPrice : " + output.averageBuyPrice.toFixed(2) + ", sellPrice : " + output.currentSellPrice.toFixed(2) + ", profit : " + output.currentProfitMargin.toFixed(2) + ", minProfit : " + sellThreshold);
                     }
