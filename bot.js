@@ -44,12 +44,6 @@ function startWatchLoop(wallet, callback) {
                             sellThreshold = ETH_MIN_PROFIT_MARGIN;
                             output.sellThreshold = sellThreshold;
                         }
-                        if (!DEV_MODE) {
-                            console.log("false");
-                        }
-                        else {
-                            console.log("true");
-                        }
                         if (output.currentProfitMargin >= sellThreshold) {
                             var sellParams = {
                                 "amount": account.balance.amount,
