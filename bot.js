@@ -57,7 +57,9 @@ function startWatchLoop(wallet, callback) {
                                         console.error(err);
                                         throw "Error in startWatchLoop - account.sell (sell)";
                                     }
+                                    callback("Selling all " + account.currency + "!");
                                     callback(tx);
+                                    callback("Sold all " + account.currency + " for price - " + (tx.native_amount.amount/tx.amount.amount));
                                     clearInterval(loopIntervalObj);
                                 });
                             } else {
@@ -86,12 +88,14 @@ function checkProfitMargin(account, callback) {
                 throw "Error in checkETHProfitMargin - account.getTransactions";
             }
             var lastBuys = [];
+            var lastSell;
             if (txs.length > 0) {
                 for (var i = 0; i < txs.length; i++) {
                     if (txs[i].amount.amount > 0 && txs[i].status.toLowerCase() == "completed") {
                         lastBuys.push(txs[i]);
                     }
                     if (txs[i].amount.amount < 0 && txs[i].type == "sell") {
+                        lastSell = txs[i];
                         break;
                     }
                 }
