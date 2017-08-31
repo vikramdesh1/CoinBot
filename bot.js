@@ -5,6 +5,7 @@ const API_KEY = process.env.API_KEY;
 const API_SECRET = process.env.API_SECRET;
 const BTC_WALLET = process.env.BTC_WALLET;
 const ETH_WALLET = process.env.ETH_WALLET;
+const LTC_WALLET = process.env.LTC_WALLET;
 const USD_WALLET_PAYMENT = process.env.USD_WALLET_PAYMENT;
 const SENTRY_DSN = process.env.SENTRY_DSN;
 const DEV_MODE = process.env.DEV_MODE;
@@ -16,6 +17,7 @@ var coinbaseClient = new Client({ 'apiKey': API_KEY, 'apiSecret': API_SECRET });
 //Profit margins
 const BTC_MIN_PROFIT_MARGIN = process.env.BTC_MIN_PROFIT_MARGIN;
 const ETH_MIN_PROFIT_MARGIN = process.env.ETH_MIN_PROFIT_MARGIN;
+const LTC_MIN_PROFIT_MARGIN = process.env.LTC_MIN_PROFIT_MARGIN;
 
 //Refresh period
 const REFRESH_PERIOD = process.env.REFRESH_PERIOD;
@@ -42,6 +44,10 @@ function startWatchLoop(wallet, callback) {
                             output.sellThreshold = sellThreshold;
                         } else if (account.currency == "ETH") {
                             sellThreshold = ETH_MIN_PROFIT_MARGIN;
+                            output.sellThreshold = sellThreshold;
+                        }
+                        else if (account.currency == "LTC") {
+                            sellThreshold = LTC_MIN_PROFIT_MARGIN;
                             output.sellThreshold = sellThreshold;
                         }
                         if (output.currentProfitMargin >= sellThreshold) {
@@ -85,7 +91,7 @@ function checkProfitMargin(account, callback) {
         account.getTransactions({}, function (err, txs) {
             if (err) {
                 console.error(err);
-                throw "Error in checkETHProfitMargin - account.getTransactions";
+                throw "Error in checkProfitMargin - account.getTransactions";
             }
             var lastBuys = [];
             var lastSell;
@@ -120,7 +126,7 @@ function checkProfitMargin(account, callback) {
                 account.sell(quoteParams, function (err, tx) {
                     if (err) {
                         console.error(err);
-                        throw "Error in checkETHProfitMargin - account.sell (quote)";
+                        throw "Error in checkProfitMargin - account.sell (quote)";
                     }
                     var avgBuyPrice = buyPrice;
                     var currentSellPrice = tx.total.amount / tx.amount.amount;
