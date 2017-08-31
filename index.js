@@ -6,6 +6,7 @@ var fs = require('fs');
 
 const BTC_WALLET = process.env.BTC_WALLET;
 const ETH_WALLET = process.env.ETH_WALLET;
+const LTC_WALLET = process.env.LTC_WALLET;
 const SENTRY_DSN = process.env.SENTRY_DSN;
 
 //Refresh period
@@ -33,16 +34,16 @@ io.on('connection', function (socket) {
 });
 
 try {
-    bot.startWatchLoop(ETH_WALLET, function (output) {
+    bot.startWatchLoop(LTC_WALLET, function (output) {
         console.log(output);
         io.emit('loopUpdate', output);
     });
-    setTimeout(function () {
+    /*setTimeout(function () {
         bot.startWatchLoop(BTC_WALLET, function (output) {
             console.log(output);
             io.emit('loopUpdate', output);
         });
-    }, REFRESH_PERIOD / 2);
+    }, REFRESH_PERIOD / 2);*/
 
 } catch (err) {
     console.log(err);
