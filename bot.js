@@ -41,6 +41,7 @@ function startWatchLoop(wallet, callback) {
                 process.exit(1);
             }
             var notificationSent = false;
+            var notificationSentTime;
             const loopIntervalObj = setInterval(function () {
                 checkProfitMargin(account, function (output) {
                     if (output == null) {
@@ -79,14 +80,16 @@ function startWatchLoop(wallet, callback) {
                             } else {
                                 if(!notificationSent) {
                                     console.log("Sending notification to IFTTT");
+                                    notificationSentTime = new Date();
                                     request.post(IFTTT_UPDATE_URL, {json : {
                                         "value1": account.currency,
                                         "value2": output.currentProfitMargin.toFixed(2)}
                                     });
                                     notificationSent = true;
-                                    setInterval(function() {
+                                } else {
+                                    if(((new Date()) - notificationSentTime) > 3600000) {
                                         notificationSent = false;
-                                    }, 3600000);
+                                    }
                                 }
                             }
                         }
