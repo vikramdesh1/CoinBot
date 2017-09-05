@@ -29,6 +29,9 @@ const REFRESH_PERIOD = process.env.REFRESH_PERIOD;
 //Request
 var request = require('request');
 
+//IFTTT Notification
+const IFTTT_UPDATE_URL = process.env.IFTTT_UPDATE_URL;
+
 function startWatchLoop(wallet, callback) {
     try {
         coinbaseClient.getAccount(wallet, function (err, account) {
@@ -75,7 +78,7 @@ function startWatchLoop(wallet, callback) {
                             } else {
                                 console.log("Would've sold all " + account.currency + " here if dev mode was off");
                                 if(!notificationSent) {
-                                    request.post('https://maker.ifttt.com/trigger/coin_profit_update/with/key/cEj6HwU1wJ3zuj1_fNoLKT', {json : {
+                                    request.post(IFTTT_UPDATE_URL, {json : {
                                         "value1": account.currency,
                                         "value2": output.currentProfitMargin.toFixed(2)}
                                     });
