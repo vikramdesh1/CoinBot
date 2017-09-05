@@ -53,8 +53,7 @@ function startWatchLoop(wallet, callback) {
                         } else if (account.currency == "ETH") {
                             sellThreshold = ETH_MIN_PROFIT_MARGIN;
                             output.sellThreshold = sellThreshold;
-                        }
-                        else if (account.currency == "LTC") {
+                        } else if (account.currency == "LTC") {
                             sellThreshold = LTC_MIN_PROFIT_MARGIN;
                             output.sellThreshold = sellThreshold;
                         }
@@ -85,6 +84,9 @@ function startWatchLoop(wallet, callback) {
                                         "value2": output.currentProfitMargin.toFixed(2)}
                                     });
                                     notificationSent = true;
+                                    setInterval(function() {
+                                        notificationSent = false;
+                                    }, 3600000);
                                 }
                             }
                         }
