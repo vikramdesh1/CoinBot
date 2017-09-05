@@ -26,6 +26,9 @@ const REFRESH_PERIOD = process.env.REFRESH_PERIOD;
 //var Raven = require('raven');
 //Raven.config(SENTRY_DSN).install();
 
+//Request
+var request = require('request');
+
 function startWatchLoop(wallet, callback) {
     try {
         coinbaseClient.getAccount(wallet, function (err, account) {
@@ -33,6 +36,7 @@ function startWatchLoop(wallet, callback) {
                 console.error(err);
                 throw "Error in startWatchLoop - client.getAccount";
             }
+            var notificationSent = false;
             const loopIntervalObj = setInterval(function () {
                 checkProfitMargin(account, function (output) {
                     if (output == null) {
@@ -65,11 +69,18 @@ function startWatchLoop(wallet, callback) {
                                     }
                                     callback("Selling all " + account.currency + "!");
                                     callback(tx);
-                                    callback("Sold all " + account.currency + " for price - " + (tx.native_amount.amount/tx.amount.amount));
+                                    callback("Sold all " + account.currency + " for price - " + (tx.native_amount.amount / tx.amount.amount));
                                     clearInterval(loopIntervalObj);
                                 });
                             } else {
                                 console.log("Would've sold all " + account.currency + " here if dev mode was off");
+                                if(!notificationSent) {
+                                    request.post('https://maker.ifttt.com/trigger/coin_profit_update/with/key/cEj6HwU1wJ3zuj1_fNoLKT', {json : {
+                                        "value1": account.currency,
+                                        "value2": output.currentProfitMargin.toFixed(2)}
+                                    });
+                                    notificationSent = true;
+                                }
                             }
                         }
                         callback(output.timestamp + " : " + account.currency + " - averageBuyPrice : " + output.averageBuyPrice.toFixed(2) + ", sellPrice : " + output.currentSellPrice.toFixed(2) + ", profit : " + output.currentProfitMargin.toFixed(2) + ", minProfit : " + sellThreshold);
