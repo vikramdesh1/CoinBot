@@ -38,6 +38,7 @@ function startWatchLoop(wallet, callback) {
             if (err) {
                 console.error(err);
                 throw "Error in startWatchLoop - client.getAccount";
+                process.exit(1);
             }
             var notificationSent = false;
             const loopIntervalObj = setInterval(function () {
@@ -69,6 +70,7 @@ function startWatchLoop(wallet, callback) {
                                     if (err) {
                                         console.error(err);
                                         throw "Error in startWatchLoop - account.sell (sell)";
+                                        process.exit(1);
                                     }
                                     callback("Selling all " + account.currency + "!");
                                     callback(tx);
@@ -106,6 +108,7 @@ function checkProfitMargin(account, callback) {
             if (err) {
                 console.error(err);
                 throw "Error in checkProfitMargin - account.getTransactions";
+                process.exit(1);
             }
             var lastBuys = [];
             var lastSell;
@@ -141,6 +144,7 @@ function checkProfitMargin(account, callback) {
                     if (err) {
                         console.error(err);
                         throw "Error in checkProfitMargin - account.sell (quote)";
+                        process.exit(1);
                     }
                     var avgBuyPrice = buyPrice;
                     var currentSellPrice = tx.total.amount / tx.amount.amount;
