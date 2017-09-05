@@ -78,8 +78,8 @@ function startWatchLoop(wallet, callback) {
                                     clearInterval(loopIntervalObj);
                                 });
                             } else {
-                                console.log("Would've sold all " + account.currency + " here if dev mode was off");
                                 if(!notificationSent) {
+                                    console.log("Sending notification to IFTTT");
                                     request.post(IFTTT_UPDATE_URL, {json : {
                                         "value1": account.currency,
                                         "value2": output.currentProfitMargin.toFixed(2)}
