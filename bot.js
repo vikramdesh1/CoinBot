@@ -83,11 +83,12 @@ function startWatchLoop(wallet, callback) {
                                     notificationSentTime = new Date();
                                     request.post(IFTTT_UPDATE_URL, {json : {
                                         "value1": account.currency,
-                                        "value2": output.currentProfitMargin.toFixed(2)}
+                                        "value2": output.currentProfitMargin.toFixed(2),
+					"value3": output.currentSellPrice.toFixed(2)}
                                     });
                                     notificationSent = true;
                                 } else {
-                                    if(((new Date()) - notificationSentTime) > 3600000) {
+                                    if(((new Date()) - notificationSentTime) > 7200000) {
                                         notificationSent = false;
                                     }
                                 }
