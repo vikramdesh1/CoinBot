@@ -38,12 +38,12 @@ try {
         console.log(output);
         io.emit('loopUpdate', output);
     });
-    /*setTimeout(function () {
-        bot.startWatchLoop(BTC_WALLET, function (output) {
+    setTimeout(function () {
+        bot.startWatchLoop(ETH_WALLET, function (output) {
             console.log(output);
             io.emit('loopUpdate', output);
         });
-    }, REFRESH_PERIOD / 2);*/
+    }, REFRESH_PERIOD / 2);
 
 } catch (err) {
     console.log(err);
