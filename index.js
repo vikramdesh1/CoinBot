@@ -34,7 +34,7 @@ io.on('connection', function (socket) {
 });
 
 try {
-    bot.startWatchLoop(LTC_WALLET, function (output) {
+    bot.startWatchLoop(BTC_WALLET, function (output) {
         console.log(output);
         io.emit('loopUpdate', output);
     });
